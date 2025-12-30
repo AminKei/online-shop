@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+body {
+  font-family: "Yekan", sans-serif;
+}
+
+.ant-typography,
+.ant-Text,
+.ant-Title,
+.ant-btn,
+.ant-input,
+.ant-select {
+  font-family: "Yekan" !important;
+}
