@@ -6,7 +6,6 @@ import {
   Rate,
   Divider,
   Badge,
-  message,
   Image,
   Tag,
 } from "antd";
@@ -16,60 +15,37 @@ import {
   HeartFilled,
 } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "../../config/axios/axiosConfig";
-import RelatedProducts from "../../components/layout/related-products/RelatedProducts";
 import { useState } from "react";
+
+import RelatedProducts from "../../components/layout/related-products/RelatedProducts";
+import { useAddToCart } from "../../queries/cart/useAddToCart";
+import { useProductById } from "../../queries/product-detail/useProductById";
 
 const { Title, Text } = Typography;
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const queryClient = useQueryClient();
 
-  const { data: product, isLoading } = useQuery({
-    queryKey: ["product", id],
-    queryFn: () => api.get(`/products/${id}`).then((res) => res.data),
-  });
+  const { data: product, isLoading } = useProductById(id);
+  const addToCart = useAddToCart();
 
-  const addToCart = useMutation({
-    mutationFn: () => api.post("/cart", { productId: Number(id) }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-      message.success("به سبد خرید اضافه شد! 🛒");
-    },
-    onError: () => message.error("ابتدا وارد حساب کاربری خود شوید"),
-  });
-
-  
-  // حالت علاقه‌مندی (فعلاً لوکال - بعداً می‌تونی با بک‌اند یا context هماهنگ کنی)
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  const toggleWishlist = () => {
-    setIsWishlisted(!isWishlisted);
-    if (!isWishlisted) {
-      message.success("به لیست علاقه‌مندی‌ها اضافه شد ❤️");
-    } else {
-      message.info("از لیست علاقه‌مندی‌ها حذف شد");
-    }
-  };
+  if (!id) return null;
 
   if (isLoading)
     return (
       <div style={{ textAlign: "center", padding: 60 }}>در حال بارگذاری...</div>
     );
+
   if (!product)
     return (
       <div style={{ textAlign: "center", color: "red" }}>محصول پیدا نشد</div>
     );
 
-  // محاسبه قیمت اصلی
-  const hasDiscount = product.discount && product.discount > 0;
-  const originalPrice = hasDiscount
-    ? Math.round(product.price / (1 - product.discount / 100))
-    : null;
+  // 🎯 تبدیل مقادیر
+  const hasDiscount = product.discount > 0;
 
-  // تبدیل جنسیت و نوع
   const genderLabel =
     product.gender === "men"
       ? "مردانه"
@@ -79,160 +55,134 @@ const ProductDetail = () => {
 
   const typeLabel = product.type === "perfume" ? "ادکلن / عطر" : "بادی اسپلش";
 
-  const reviewsCount = Math.floor(Math.random() * 150) + 80;
+  const genderColor =
+    product.gender === "men"
+      ? "blue"
+      : product.gender === "women"
+      ? "magenta"
+      : "gold";
 
   return (
     <div style={{ paddingBottom: 100, textAlign: "right" }}>
-      {/* عکس اصلی + دکمه علاقه‌مندی */}
-      <div
-        style={{ padding: "4px", textAlign: "center", position: "relative" }}
-      >
+      {/* تصویر + علاقه‌مندی */}
+      <div style={{ position: "relative", textAlign: "center" }}>
         <Image
-          src={product.image || "https://via.placeholder.com/600x600"}
+          src={product.image}
           alt={product.name}
-          style={{
-            width: "100%",
-            height: "auto",
-            borderRadius: 10,
-          }}
+          style={{ borderRadius: 12 }}
         />
 
         <Button
           type="text"
           shape="circle"
-          size="large"
           icon={
             isWishlisted ? (
-              <HeartFilled style={{ fontSize: 24, color: "#ff4d4f" }} />
+              <HeartFilled style={{ fontSize: 22, color: "#ff4d4f" }} />
             ) : (
-              <HeartOutlined style={{ fontSize: 24, color: "#d8d8d8" }} />
+              <HeartOutlined style={{ fontSize: 22, color: "#d8d8d8" }} />
             )
           }
-          onClick={toggleWishlist}
+          onClick={() => setIsWishlisted((p) => !p)}
           style={{
             position: "absolute",
-            top: 1,
-            right: -10,
+            top: 8,
+            right: 8,
             backdropFilter: "blur(4px)",
-            border: "none",
-            width: 48,
-            height: 48,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
           }}
         />
       </div>
 
-      {/* اطلاعات محصول */}
-      <div style={{ padding: "12px" }}>
-        <Title level={4} style={{ margin: "0 0 0px" }}>
-          {product.name}
-        </Title>
+      {/* عنوان */}
+      <Title level={4} style={{ marginTop: 12 }}>
+        {product.name}
+      </Title>
 
-        <Space style={{ marginBottom: 16 }}>
-          <Rate
-            disabled
-            allowHalf
-            defaultValue={product.rating}
-            style={{ fontSize: 16 }}
-          />
-          <Text type="secondary">({reviewsCount} نظر)</Text>
-        </Space>
-        <br />
-        <Space style={{ marginBottom: 16 }}>
-          <Tag
-            color={
-              product.gender === "unisex"
-                ? "gold"
-                : product.gender === "men"
-                ? "blue"
-                : "magenta"
-            }
-          >
-            مناسب برای: {genderLabel}
-          </Tag>
-          <Tag color={product.type === "perfume" ? "purple" : "pink"}>
-            {typeLabel}
-          </Tag>
-        </Space>
-        <br />
+      {/* امتیاز */}
+      <Space>
+        <Rate disabled allowHalf defaultValue={product.rating} />
+        <Text type="secondary">({product.rating} از ۵)</Text>
+      </Space>
 
-        <Divider style={{ margin: "16px 0" }} />
+      {/* تگ‌ها */}
+      <Space style={{ marginTop: 12 }}>
+        <Tag color={genderColor}>مناسب برای: {genderLabel}</Tag>
+        <Tag color={product.type === "perfume" ? "purple" : "pink"}>
+          {typeLabel}
+        </Tag>
+      </Space>
 
-        {/* قیمت */}
-        <Space direction="vertical" style={{ width: "100%", marginBottom: 24 }}>
-          {hasDiscount ? (
-            <Space align="center">
-              <Text delete style={{ fontSize: 14, color: "#999" }}>
-                {originalPrice?.toLocaleString()} تومان
-              </Text>
-              <Badge
-                count={`-${product.discount}%`}
-                style={{
-                  backgroundColor: "#f5222d",
-                  color: "white",
-                  borderRadius: 8,
-                  padding: "0 8px",
-                }}
-              />
-            </Space>
-          ) : null}
-          <Title level={4} style={{ margin: 0, color: "#1890ff" }}>
-            {product.price.toLocaleString()} تومان
-          </Title>
-        </Space>
+      <Divider />
 
-        {/* مشخصات */}
-        <Card title="مشخصات" style={{ borderRadius: 12, marginBottom: 10 }}>
-          <Space direction="vertical" style={{ width: "100%" }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text strong>{product.name}</Text>
-              <Text type="secondary">:برند</Text>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text strong>{typeLabel}</Text>
-              <Text type="secondary">:نوع محصول</Text>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text strong>{genderLabel}</Text>
-              <Text type="secondary">:مناسب برای</Text>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text strong>{product.rating} از ۵</Text>
-              <Text type="secondary">:امتیاز کاربران</Text>
-            </div>
+      {/* قیمت */}
+      <Space direction="vertical" style={{ width: "100%" }}>
+        {hasDiscount && (
+          <Space>
+            <Text delete type="secondary">
+              {product.price?.toLocaleString()} تومان
+            </Text>
+            <Badge
+              count={`-${product.discount}%`}
+              style={{ backgroundColor: "#f5222d" }}
+            />
           </Space>
-        </Card>
+        )}
 
-        {/* توضیحات کامل */}
-        <Card style={{ borderRadius: 12, background: "#f9f9f9" }}>
-          <Text style={{ lineHeight: 1.6 }}>{product.description}</Text>
-        </Card>
-      </div>
+        <Title level={4} style={{ color: "#1890ff", margin: 0 }}>
+          تومان {(product.price * (100 - product.discount)  / 100).toLocaleString()}
+        </Title>
+      </Space>
 
+      {/* مشخصات */}
+      <Card title="مشخصات محصول" style={{ borderRadius: 12, marginTop: 16 }}>
+        <Space direction="vertical" style={{ width: "100%" }}>
+          <div className="flex justify-between">
+            <Text strong>{product.name}</Text>
+            <Text type="secondary">:نام محصول</Text>
+          </div>
+
+          <div className="flex justify-between">
+            <Text strong>{typeLabel}</Text>
+            <Text type="secondary">:نوع محصول</Text>
+          </div>
+
+          <div className="flex justify-between">
+            <Text strong>{genderLabel}</Text>
+            <Text type="secondary">:مناسب برای</Text>
+          </div>
+
+          <div className="flex justify-between">
+            <Text strong>{product.rating} از ۵</Text>
+            <Text type="secondary">:امتیاز کاربران</Text>
+          </div>
+        </Space>
+      </Card>
+
+      {/* توضیحات */}
+      {product.description && (
+        <Card
+          style={{
+            marginTop: 12,
+            borderRadius: 12,
+            background: "#f9f9f9",
+          }}
+        >
+          <Text style={{ lineHeight: 1.8 }}>{product.description}</Text>
+        </Card>
+      )}
+
+      {/* افزودن به سبد */}
       <Button
         type="primary"
-        size="middle"
+        block
         icon={<ShoppingCartOutlined />}
         loading={addToCart.isPending}
-        style={{
-          border: "none",
-          height: 48,
-          fontSize: 18,
-          fontWeight: 600,
-          bottom: "70px",
-          left: 0,
-          margin: "12px",
-          width: "95%",
-          marginTop: "10vh",
-        }}
-        block
-        onClick={() => addToCart.mutate()}
+        style={{ marginTop: 24, height: 48 }}
+        onClick={() => addToCart.mutate(product.id)}
       >
         افزودن به سبد خرید
       </Button>
 
+      {/* محصولات مرتبط */}
       <RelatedProducts
         currentProductId={product.id}
         type={product.type}

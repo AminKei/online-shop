@@ -35,6 +35,7 @@ export const products = [
     gender: "men",
     type: "perfume",
     rating: 4.7,
+    discount: 12,
   },
   {
     id: 4,
@@ -54,11 +55,11 @@ export const products = [
     price: 17200000,
     description:
       "عطری شیرین و گرم با نت‌های سیب، وانیل، چوب گایاک و کارامل. رایحه‌ای لوکس، جذاب و اعتیادآور که برای فصل سرد عالی است. یکی از محبوب‌ترین عطرهای نیش با پخش بوی فوق‌العاده.",
-    image:
-      "https://www.fragrantica.com/img/perfume/375x500/89988.jpg",
+    image: "https://www.fragrantica.com/img/perfume/375x500/89988.jpg",
     gender: "men",
     type: "perfume",
     rating: 4.6,
+    discount: 3,
   },
   {
     id: 6,

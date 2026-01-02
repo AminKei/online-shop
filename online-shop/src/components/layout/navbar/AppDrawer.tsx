@@ -126,14 +126,13 @@ export default function AppDrawer({ visible, onClose, token }: AppDrawerProps) {
         <div className="w-[80%] p-2">
           <Button
             danger
-            block
             size="middle"
             icon={<LogoutOutlined />}
             onClick={handleLogout}
             style={{
               position: "fixed",
               bottom: "100px",
-              width: "75%",
+              // width: "100%",
               height: "40px",
             }}
           >

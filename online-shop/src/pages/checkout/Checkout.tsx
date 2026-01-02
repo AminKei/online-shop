@@ -6,22 +6,20 @@ import {
   Input,
   Radio,
   Divider,
-  message,
   Select,
 } from "antd";
 import { HomeOutlined, TruckOutlined, WalletOutlined } from "@ant-design/icons";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "../../config/axios/axiosConfig";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import { useCart } from "../../queries/cart/useCart";
+import { useCreateOrder } from "../../queries/order/useCreateOrder";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 const Checkout = () => {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const { data: cart } = useCart();
+  const createOrder = useCreateOrder();
 
   const [address, setAddress] = useState({
     province: "",
@@ -31,46 +29,37 @@ const Checkout = () => {
     postalCode: "",
   });
 
-  const [shippingType, setShippingType] = useState("standard");
+  const [shippingType, setShippingType] = useState<"standard" | "express">(
+    "standard"
+  );
 
   const shippingCost = shippingType === "express" ? 80000 : 40000;
 
-  const { data: cart } = useCart();
-
   const total =
     cart?.reduce(
-      (sum: number, item: any) => sum + item.product.price * item.quantity,
+      (sum: any, item: any) => sum + item.product.price * (100 - item.product.discount) / 100 * item.quantity,
       0
     ) || 0;
 
   const finalPrice = total + shippingCost;
 
-  const orderMutation = useMutation({
-    mutationFn: () =>
-      api.post("/orders", {
-        address,
-        shippingType,
-      }),
-    onSuccess: () => {
-      message.success("سفارش با موفقیت ثبت شد 🎉");
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-      navigate("/");
-    },
-    onError: () => {
-      message.error("ثبت سفارش ناموفق بود");
-    },
-  });
-
   const isAddressValid = Object.values(address).every(Boolean);
 
+  const submitOrder = () => {
+    createOrder.mutate({
+      address,
+      shippingType,
+    });
+  };
+
   return (
-    <div className=" min-h-screen " dir="rtl">
+    <div className="min-h-screen" dir="rtl">
       <Title level={5} className="text-center mb-6">
         تکمیل سفارش
       </Title>
 
       {/* آدرس */}
-      <Card className="rounded-2xl mb-4 ">
+      <Card className="rounded-2xl mb-4">
         <Space align="center" className="mb-3">
           <HomeOutlined />
           <Text strong>آدرس تحویل گیرنده</Text>
@@ -106,15 +95,18 @@ const Checkout = () => {
             placeholder="کد پستی"
             maxLength={10}
             onChange={(e) =>
-              setAddress({ ...address, postalCode: e.target.value })
+              setAddress({
+                ...address,
+                postalCode: e.target.value,
+              })
             }
           />
         </div>
       </Card>
 
       {/* ارسال */}
-      <Card className="rounded-2xl mb-4 mt-2" style={{ marginTop: "1vh" }}>
-        <Space align="center" className="mb-3">
+      <Card style={{ marginTop: "1vh", marginBottom: "1vh" }}>
+        <Space className="mb-3" style={{display:"block"}}>
           <TruckOutlined />
           <Text strong>روش ارسال</Text>
         </Space>
@@ -122,9 +114,8 @@ const Checkout = () => {
         <Radio.Group
           value={shippingType}
           onChange={(e) => setShippingType(e.target.value)}
-          className="w-full"
         >
-          <Space direction="vertical" className="w-full">
+          <Space direction="vertical">
             <Radio value="standard">🚚 ارسال عادی – ۴۰٬۰۰۰ تومان</Radio>
             <Radio value="express">⚡ ارسال فوری – ۸۰٬۰۰۰ تومان</Radio>
           </Space>
@@ -132,7 +123,7 @@ const Checkout = () => {
       </Card>
 
       {/* صورتحساب */}
-      <Card className="rounded-2xl mb-6" style={{ marginTop: "1vh" }}>
+      <Card className="rounded-2xl mb-6">
         <Space align="center" className="mb-3">
           <WalletOutlined />
           <Text strong>صورتحساب</Text>
@@ -168,9 +159,9 @@ const Checkout = () => {
         block
         size="large"
         disabled={!isAddressValid}
-        loading={orderMutation.isPending}
-        onClick={() => orderMutation.mutate()}
-        style={{ marginTop: "1vh" }}
+        loading={createOrder.isPending}
+        onClick={submitOrder}
+        style={{marginTop:"1vh"}}
       >
         ثبت نهایی سفارش
       </Button>

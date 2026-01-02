@@ -35,7 +35,7 @@ const Cart = () => {
 
   const total =
     cart?.reduce(
-      (sum: number, item: any) => sum + item.product.price * item.quantity,
+      (sum: number, item: any) => sum + (item.product.price * (100 - item.product.discount) / 100) * item.quantity,
       0
     ) || 0;
 
@@ -90,7 +90,7 @@ const Cart = () => {
                     {item.product.price.toLocaleString()}
                   </Text>
                   <Text strong style={{ color: "#f5222d", fontSize: 14 }}>
-                    تومان {(item.product.price * 0.75).toLocaleString()}
+                    تومان {(item.product.price * (100 - item.product.discount) / 100).toLocaleString()}
                   </Text>
                 </div>
 

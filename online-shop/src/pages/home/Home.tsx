@@ -16,14 +16,6 @@ const { Title } = Typography;
 const Home = () => {
   const { data: products = [] } = useProducts();
 
-  const discountProducts = products.slice(0, 8).map((p: any) => ({
-    ...p,
-    originalPrice: Math.round(p.price * 1.25),
-    discount: 20 + Math.floor(Math.random() * 10),
-  }));
-
-  const topSalesProducts = products.slice(8, 15);
-
   return (
     <div style={{ paddingBottom: 80, direction: "rtl" }}>
       <SliderHome />
@@ -52,15 +44,15 @@ const Home = () => {
           gutter={[16, 16]}
           style={{ overflowX: "auto", flexWrap: "nowrap" }}
         >
-          {discountProducts.map((product: any) => (
+          {products.slice(0, 7).map((product: any) => (
             <div key={product.id} style={{ padding: "0 5px" }}>
               <ProductCard
                 id={product.id}
                 name={product.name}
-                price={product.price}
                 image={product.image}
+                originalPrice={product.price}
                 discount={product.discount}
-                originalPrice={product.originalPrice}
+                price={product.price * (100 - product.discount)  / 100}
               />
             </div>
           ))}
@@ -92,7 +84,7 @@ const Home = () => {
           gutter={[16, 16]}
           style={{ overflowX: "auto", flexWrap: "nowrap" }}
         >
-          {topSalesProducts.map((product: any) => (
+          {products.slice(8, 15).map((product: any) => (
             <div key={product.id} style={{ padding: "0 5px" }}>
               <ProductCard
                 id={product.id}

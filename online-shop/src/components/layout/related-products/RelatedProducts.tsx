@@ -16,7 +16,7 @@ const RelatedProducts = ({ currentProductId, type, gender }: Props) => {
   if (isLoading) {
     return (
       <div style={{ textAlign: "center", padding: 40 }}>
-        <Spin />
+      <Spin />
       </div>
     );
   }
@@ -44,9 +44,10 @@ const RelatedProducts = ({ currentProductId, type, gender }: Props) => {
           <ProductCard
             id={product.id}
             name={product.name}
-            price={product.price}
             image={product.image}
             discount={product.discount}
+            originalPrice={product.price}
+            price={(product.price * (100 - product.discount)) / 100}
           />
         ))}
       </Row>
