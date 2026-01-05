@@ -4,23 +4,21 @@ import helmet from "helmet";
 import morgan from "morgan";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { products } from "./api/products";
+import { products } from "./api/products"; // فایل محصولات فیک شما
 
 const app = express();
 const PORT = 5000;
-const JWT_SECRET = "your_super_secret_key_change_it_later"; // بعداً عوض کن
+const JWT_SECRET = "your_super_secret_key_change_it_later"; // حتماً بعداً عوض کن!
 
 app.use(helmet());
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
-// دیتای فیک محصولات
-
-
-// کاربران (در مموری – برای تست)
+// دیتابیس فیک در مموری
 const users: any[] = [];
-const carts: any = {}; // { userId: [items] }
+const carts: { [userId: number]: any[] } = {}; // { userId: [items] }
+const wishlists: { [userId: number]: number[] } = {}; // { userId: [productIds] }
 const orders: any[] = [];
 
 interface AuthRequest extends express.Request {
@@ -45,7 +43,7 @@ const authenticateToken = (
   });
 };
 
-// روت‌ها
+// روت‌های عمومی
 
 // لیست محصولات
 app.get("/api/products", (req, res) => {
@@ -71,7 +69,10 @@ app.post("/api/auth/register", async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = { id: users.length + 1, email, password: hashedPassword, name };
   users.push(user);
+
+  // مقداردهی اولیه سبد خرید و علاقه‌مندی‌ها
   carts[user.id] = [];
+  wishlists[user.id] = [];
 
   const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
     expiresIn: "7d",
@@ -100,6 +101,7 @@ app.post("/api/auth/login", async (req, res) => {
 // پروفایل کاربر
 app.get("/api/user/profile", authenticateToken, (req: AuthRequest, res) => {
   const user = users.find((u) => u.id === req.user.id);
+  if (!user) return res.status(404).json({ message: "کاربر پیدا نشد" });
   res.json({ id: user.id, email: user.email, name: user.name });
 });
 
@@ -109,41 +111,87 @@ app.get("/api/user/orders", authenticateToken, (req: AuthRequest, res) => {
   res.json(userOrders);
 });
 
-// سبد خرید
+// ==================== سبد خرید ====================
+
 app.get("/api/cart", authenticateToken, (req: AuthRequest, res) => {
   const cart = carts[req.user.id] || [];
   res.json(cart);
 });
 
-  app.post("/api/cart", authenticateToken, (req: AuthRequest, res) => {
-    const { productId, quantity = 1 } = req.body;
-    const product = products.find((p) => p.id === productId);
-    if (!product) return res.status(404).json({ message: "محصول پیدا نشد" });
+app.post("/api/cart", authenticateToken, (req: AuthRequest, res) => {
+  const { productId, quantity = 1 } = req.body;
+  const product = products.find((p) => p.id === productId);
+  if (!product) return res.status(404).json({ message: "محصول پیدا نشد" });
 
-    const cart = carts[req.user.id] || [];
-    const existing = cart.find((i: any) => i.product.id === productId);
-    if (existing) {
-      existing.quantity += quantity;
-    } else {
-      cart.push({ product, quantity });
-    }
-    carts[req.user.id] = cart;
-    res.json(cart);
-  });
-
-app.delete(
-  "/api/cart/:productId",
-  authenticateToken,
-  (req: AuthRequest, res) => {
-    const cart = carts[req.user.id] || [];
-    carts[req.user.id] = cart.filter(
-      (i: any) => i.product.id !== parseInt(req.params.productId)
-    );
-    res.json(carts[req.user.id]);
+  const cart = carts[req.user.id] || [];
+  const existing = cart.find((i: any) => i.product.id === productId);
+  if (existing) {
+    existing.quantity += quantity;
+  } else {
+    cart.push({ product, quantity });
   }
-);
+  carts[req.user.id] = cart;
+  res.json(cart);
+});
 
-// ایجاد سفارش از سبد خرید
+app.delete("/api/cart/:productId", authenticateToken, (req: AuthRequest, res) => {
+  const productId = parseInt(req.params.productId);
+  const cart = carts[req.user.id] || [];
+  carts[req.user.id] = cart.filter((i: any) => i.product.id !== productId);
+  res.json(carts[req.user.id]);
+});
+
+// ==================== علاقه‌مندی‌ها (Wishlist) ====================
+
+// دریافت لیست علاقه‌مندی‌ها (لیست کامل محصولات)
+app.get("/api/wishlist", authenticateToken, (req: AuthRequest, res) => {
+  const wishlistProductIds = wishlists[req.user.id] || [];
+  const wishlistProducts = products.filter((p) =>
+    wishlistProductIds.includes(p.id)
+  );
+  res.json(wishlistProducts);
+});
+
+// اضافه کردن به علاقه‌مندی‌ها
+app.post("/api/wishlist", authenticateToken, (req: AuthRequest, res) => {
+  const { productId } = req.body;
+  if (!productId) return res.status(400).json({ message: "productId لازم است" });
+
+  const product = products.find((p) => p.id === productId);
+  if (!product) return res.status(404).json({ message: "محصول پیدا نشد" });
+
+  const userWishlist = wishlists[req.user.id] || [];
+  if (!userWishlist.includes(productId)) {
+    userWishlist.push(productId);
+    wishlists[req.user.id] = userWishlist;
+  }
+
+  res.json({ message: "به علاقه‌مندی‌ها اضافه شد", wishlist: userWishlist });
+});
+
+// حذف از علاقه‌مندی‌ها
+app.delete("/api/wishlist/:productId", authenticateToken, (req: AuthRequest, res) => {
+  const productId = parseInt(req.params.productId);
+  const userWishlist = wishlists[req.user.id] || [];
+
+  wishlists[req.user.id] = userWishlist.filter((id) => id !== productId);
+
+  res.json({
+    message: "از علاقه‌مندی‌ها حذف شد",
+    wishlist: wishlists[req.user.id],
+  });
+});
+
+// چک کردن وضعیت یک محصول (در علاقه‌مندی‌هاست یا نه؟)
+app.get("/api/wishlist/check/:productId", authenticateToken, (req: AuthRequest, res) => {
+  const productId = parseInt(req.params.productId);
+  const userWishlist = wishlists[req.user.id] || [];
+  const isInWishlist = userWishlist.includes(productId);
+  res.json({ isInWishlist });
+});
+
+// ==================== سفارشات ====================
+
 app.post("/api/orders", authenticateToken, (req: AuthRequest, res) => {
   const cart = carts[req.user.id] || [];
   if (cart.length === 0)
@@ -166,6 +214,7 @@ app.post("/api/orders", authenticateToken, (req: AuthRequest, res) => {
   res.json(order);
 });
 
+// روت اصلی
 app.get("/", (req, res) => {
   res.json({ message: "بک‌اند فروشگاه آنلاین آماده است! 🚀" });
 });

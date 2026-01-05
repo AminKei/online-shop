@@ -59,13 +59,13 @@ export default function AppDrawer({ visible, onClose, token }: AppDrawerProps) {
           key="1"
           header={
             <span className="font-semibold flex flex-row-reverse items-center gap-2">
-              فروشگاه
               <ShopOutlined className="text-[#5e7bff]" />
+              فروشگاه
             </span>
           }
           className="mb-3 rounded-lg bg-gray-50"
         >
-          <div className="flex flex-col gap-2 border-r-2 border-gray-300 pr-4 mr-2">
+          <div className="flex flex-col gap-2 border-r-2 border-gray-300 pr-4 mr-2 ">
             <Button type="text" className="text-right">
               مشاهده سفارشات
             </Button>
@@ -80,8 +80,8 @@ export default function AppDrawer({ visible, onClose, token }: AppDrawerProps) {
           key="2"
           header={
             <span className="font-semibold flex flex-row-reverse items-center gap-2">
-              سفارشات من
               <ShoppingCartOutlined className="text-[#5e7bff]" />
+              سفارشات من
             </span>
           }
           className="mb-3 rounded-lg bg-gray-50"
@@ -101,8 +101,8 @@ export default function AppDrawer({ visible, onClose, token }: AppDrawerProps) {
           key="3"
           header={
             <span className="font-semibold flex flex-row-reverse items-center gap-2">
-              پشتیبانی
               <QuestionCircleOutlined className="text-[#5e7bff]" />
+              پشتیبانی
             </span>
           }
           className="mb-3 rounded-lg bg-gray-50"

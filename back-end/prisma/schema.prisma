@@ -3,8 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite" // فرقی نداره چی باشه، چون استفاده واقعی نمی‌کنیم
 }
 
 model User {
@@ -19,4 +18,35 @@ model User {
   @@map("users")
 }
 
-// مدل‌های دیگه (Product, Category و ...) رو بعداً اضافه می‌کنیم
+model Product {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  price       Float
+  image       String?
+  category    String?
+  stock       Int      @default(10)
+
+  @@map("products")
+}
+
+// اگه بعداً خواستی سبد خرید و سفارشات رو هم تایپ‌سیف کنی، این‌ها رو هم اضافه کن
+model CartItem {
+  id         Int     @id @default(autoincrement())
+  userId     Int
+  productId  Int
+  quantity   Int     @default(1)
+
+  @@unique([userId, productId])
+  @@map("cart_items")
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  total     Float
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+
+  @@map("orders")
+}

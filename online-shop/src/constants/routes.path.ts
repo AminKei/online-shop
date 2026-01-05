@@ -15,4 +15,5 @@ export const RoutePath = Object.freeze({
   checkout: "/checkout",
   profile: "/profile",
   orders: "/orders",
+  wishlist: "/wishlist",
 });

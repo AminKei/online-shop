@@ -22,6 +22,7 @@ export default function AppBar() {
     <>
       <div
         dir="rtl"
+        
         style={{
           position: "fixed",
           top: 0,

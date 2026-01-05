@@ -61,7 +61,7 @@ const Profile = () => {
       icon: <HeartOutlined />,
       title: "علاقه‌مندی‌ها",
       desc: "محصولات ذخیره شده",
-      onClick: () => navigate("/favorites"),
+      onClick: () => navigate("/wishlist"),
     },
     {
       icon: <CreditCardOutlined />,
