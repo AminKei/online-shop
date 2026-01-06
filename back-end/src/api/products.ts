@@ -55,7 +55,8 @@ export const products = [
     price: 17200000,
     description:
       "عطری شیرین و گرم با نت‌های سیب، وانیل، چوب گایاک و کارامل. رایحه‌ای لوکس، جذاب و اعتیادآور که برای فصل سرد عالی است. یکی از محبوب‌ترین عطرهای نیش با پخش بوی فوق‌العاده.",
-    image: "https://www.fragrantica.com/img/perfume/375x500/89988.jpg",
+    image:
+      "https://khalifechi.com/wp-content/uploads/2022/07/2301_OAJAN_125ml_02-e1701579244885-300x275.webp",
     gender: "men",
     type: "perfume",
     rating: 4.6,
@@ -68,7 +69,7 @@ export const products = [
     description:
       "عطری خنک و چوبی با نت‌های ترنج، زنجبیل، سیب و چوب سدر. رایحه‌ای مدرن، جذاب و همه‌پسند برای مردان جوان. ماندگاری خوب و مناسب استفاده روزانه.",
     image:
-      "https://www.yslbeauty.com/dw/image/v2/BDCZ_PRD/on/demandware.static/-/Sites-ysl-master-catalog/default/dw5e4d5d5f/y-edp-100ml.jpg",
+      "https://testerman.ir/wp-content/uploads/2020/01/img1530-1562724748.gif",
     gender: "men",
     type: "perfume",
     rating: 4.4,
@@ -81,7 +82,7 @@ export const products = [
     description:
       "عطری شیرین و خنک با نت‌های نعناع، سیب سبز، وانیل و دانه تونکا. رایحه‌ای جوان، پر انرژی و جذاب برای قرارهای عاشقانه و مهمانی‌ها.",
     image:
-      "https://www.versace.com/dw/image/v2/AAWJ_PRD/on/demandware.static/-/Sites-versace-master-catalog/default/dw3d9f5a4d/eros-eau-de-parfum-100ml.jpg",
+      "https://cdn.riiha.ir/storage/upload/images/2020/11/12/5fac4aca366ec.jpg",
     gender: "men",
     type: "perfume",
     rating: 4.3,
@@ -94,7 +95,7 @@ export const products = [
     description:
       "عطری خنک و شیرین با نت‌های گریپ‌فروت، برگ بو، جاسمین و چوب گایاک. رایحه‌ای ورزشکارانه، جذاب و پرجذبه برای مردان جوان.",
     image:
-      "https://www.pacorabanne.com/dw/image/v2/BBKT_PRD/on/demandware.static/-/Sites-pacorabanne-master-catalog/default/dw8f3e4d5f/invictus-victory-elixir-100ml.jpg",
+      "https://donyayeatr.com/wp-content/uploads/2024/04/Smart-Collection-40-25-ml-DonyayeAtr.com_-1.jpg",
     gender: "men",
     type: "perfume",
     rating: 4.5,
@@ -106,7 +107,7 @@ export const products = [
     description:
       "عطری چوبی-آروماتیک با نت‌های اسطوخودوس، لیمو، نارنج و پچولی. رایحه‌ای شیک، مدرن و جذاب برای مردان باکلاس.",
     image:
-      "https://www.gucci.com/dw/image/v2/AAWJ_PRD/on/demandware.static/-/Sites-gucci-master-catalog/default/dw3d9f5a4d/guilty-pour-homme-parfum-90ml.jpg",
+      "https://boodise.shop/wp-content/uploads/2022/05/Gucci-Guilty.jpg",
     gender: "men",
     type: "perfume",
     rating: 4.4,
@@ -118,7 +119,7 @@ export const products = [
     description:
       "عطری چوبی با نت‌های ترنج، وتیور، پچولی و چوب آگار. رایحه‌ای ماجراجویانه، تازه و ماندگار برای مردانی که عاشق طبیعت هستند.",
     image:
-      "https://www.montblanc.com/dw/image/v2/BBKT_PRD/on/demandware.static/-/Sites-montblanc-master-catalog/default/dw8f3e4d5f/explorer-eau-de-parfum-100ml.jpg",
+      "https://khoshbo.com/wp-content/uploads/2023/01/Mont-blancLegend-768x768.jpg",
     gender: "men",
     type: "perfume",
     rating: 4.3,
@@ -131,7 +132,7 @@ export const products = [
     description:
       "عطری خنک و میوه‌ای با نت‌های ترنج، پرتقال، چای سبز و مشک. رایحه‌ای تازه، باکلاس و ماندگار برای تابستان.",
     image:
-      "https://www.creedboutique.com/dw/image/v2/BBKS_PRD/on/demandware.static/-/Sites-creed-master-catalog/default/dw1c3d3e5f/silver-mountain-water-100ml.jpg",
+      "https://iranous.com/17012-thickbox_default_2x/creed-silver-mountain-water-edp.jpg",
     gender: "men",
     type: "perfume",
     rating: 4.5,
@@ -143,7 +144,7 @@ export const products = [
     description:
       "عطری گرم و شیرین با نت‌های تنباکو، وانیل، کاکائو و میوه‌های خشک. رایحه‌ای لوکس و اعتیادآور برای فصل سرد.",
     image:
-      "https://www.tomfordbeauty.com/dw/image/v2/BBQC_PRD/on/demandware.static/-/Sites-tfb-master-catalog/default/dw2e5f6a5f/tobacco-vanille-eau-de-parfum.jpg",
+      "https://atrafra.com/wp-content/uploads/2022/05/Emarati_Perfume_Tom_Ford_Black_Orchid_100ml_Unisex_EDP_01.png",
     gender: "men",
     type: "perfume",
     rating: 4.7,

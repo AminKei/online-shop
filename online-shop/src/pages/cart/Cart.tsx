@@ -35,7 +35,10 @@ const Cart = () => {
 
   const total =
     cart?.reduce(
-      (sum: number, item: any) => sum + (item.product.price * (100 - item.product.discount) / 100) * item.quantity,
+      (sum: number, item: any) =>
+        sum +
+        ((item.product.price * (100 - item.product.discount)) / 100) *
+          item.quantity,
       0
     ) || 0;
 
@@ -81,20 +84,38 @@ const Cart = () => {
           <Space direction="vertical" style={{ width: "100%" }}>
             <div style={{ display: "flex", gap: 10 }}>
               <div style={{ flex: 1 }}>
-                <Text strong style={{ fontSize: 16, display: "block" }}>
+                <Text strong style={{ fontSize: 14, display: "block" }}>
                   {item.product.name}
                 </Text>
-
                 <div style={{ display: "grid", gap: 4 }}>
-                  <Text delete style={{ color: "#8c8c8c" }}>
-                    {item.product.price.toLocaleString()}
+                  <Text
+                    strong
+                    delete={item.product.discount > 0}
+                    style={{
+                      fontSize: item.product.discount ? 14 : 16,
+                      color: item.product.discount ? "gray" : "red",
+                    }}
+                  >
+                    {item.product.price.toLocaleString()} تومان
                   </Text>
-                  <Text strong style={{ color: "#f5222d", fontSize: 14 }}>
-                    تومان {(item.product.price * (100 - item.product.discount) / 100).toLocaleString()}
+
+                  <Text strong style={{ color: "#f5222d", fontSize: 16 }}>
+                    {item.product.discount > 0 &&
+                      (
+                        (item.product.price * (100 - item.product.discount)) /
+                        100
+                      ).toLocaleString()}
                   </Text>
                 </div>
-
-                <Badge count="۲۵٪" style={{ backgroundColor: "#f5222d" }} />
+                {item.product.discount > 0 && (
+                  <Badge
+                    count={`${item.product.discount}%`}
+                    style={{
+                      backgroundColor: "#f5222d",
+                      marginTop: 8,
+                    }}
+                  />
+                )}{" "}
               </div>
 
               <img
