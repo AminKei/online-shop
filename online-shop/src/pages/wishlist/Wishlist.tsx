@@ -111,7 +111,10 @@ const Wishlist = () => {
 
                 <Space direction="vertical" style={{ marginTop: 8 }}>
                   {product.discount > 0 && (
-                    <Text delete type="secondary">
+                    <Text delete type="secondary" >
+                      {product.discount > 0 && (
+                        <Tag color="red">-{product.discount}%</Tag>
+                      )}
                       {product.price.toLocaleString()} تومان
                     </Text>
                   )}
@@ -123,9 +126,6 @@ const Wishlist = () => {
                       : product.price.toLocaleString()}{" "}
                     تومان
                   </Text>
-                  {product.discount > 0 && (
-                    <Tag color="red">-{product.discount}%</Tag>
-                  )}
                 </Space>
               </div>
             </div>
