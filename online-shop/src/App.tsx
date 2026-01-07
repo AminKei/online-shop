@@ -17,12 +17,10 @@ function App() {
   return (
     <BrowserRouter>
       <MobileOnly>
-        <Layout style={{ minHeight: "100vh", fontFamily: "Yekan" }}>
+        <Layout className="min-h-full font-[Yekan]">
           <AppHeader />
 
-          <Content
-            style={{ padding: "20px", marginTop: "-2vh", background: "#fff" }}
-          >
+          <Content className="p-4 -mt-5 bg-[#fff]">
             <Suspense fallback={<Loading />}>
               <AppRoutes />
             </Suspense>

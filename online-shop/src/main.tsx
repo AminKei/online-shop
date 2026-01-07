@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App.tsx";
 import "./assets/fonts/fonts.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
+import "./utils/customizeAntdMessage";
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
