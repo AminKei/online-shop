@@ -12,15 +12,15 @@ import {
 } from "antd";
 import {
   DeleteOutlined,
-  HeartFilled,
+  HeartOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
-import Title from "antd/es/typography/Title";
 import { useWishlist } from "../../queries/wishlist/useWishlist";
 import { useToggleWishlist } from "../../queries/wishlist/useToggleWishlist";
 import { useAddToCart } from "../../queries/cart/useAddToCart";
+import SubHeader from "../../components/ui/SubHeader/SubHeader";
 
 const { Text } = Typography;
 
@@ -62,27 +62,8 @@ const Wishlist = () => {
   }
 
   return (
-    <div style={{ padding: "8px", direction: "rtl", marginBottom: "10vh" }}>
-      <div
-        style={{
-          background: "linear-gradient(135deg, #646fff, #355aff)",
-          color: "white",
-          padding: "10px 16px",
-          textAlign: "center",
-          borderRadius: "10px",
-          marginBottom: "2vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <HeartFilled
-          style={{ color: "#ff4d4f", marginLeft: 8, fontSize: 20 }}
-        />
-        <Title level={5} style={{ margin: 0, color: "white" }}>
-          علاقه‌مندی‌های من ({wishlist.length})
-        </Title>
-      </div>
+    <div style={{ marginBottom: "10vh" }}>
+      <SubHeader title="علاقه‌مندی‌های من" icon={<HeartOutlined />} />
 
       <Space direction="vertical" size={16} style={{ width: "100%" }}>
         {wishlist.map((product: any) => (
@@ -92,14 +73,6 @@ const Wishlist = () => {
             bodyStyle={{ padding: 12, textAlign: "right" }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <Image
-                alt={product.name}
-                src={product.image}
-                preview={false}
-                width={100}
-                style={{ borderRadius: 8, objectFit: "cover" }}
-              />
-
               <div style={{ flex: 1 }}>
                 <Text
                   strong
@@ -111,7 +84,7 @@ const Wishlist = () => {
 
                 <Space direction="vertical" style={{ marginTop: 8 }}>
                   {product.discount > 0 && (
-                    <Text delete type="secondary" >
+                    <Text delete type="secondary">
                       {product.discount > 0 && (
                         <Tag color="red">-{product.discount}%</Tag>
                       )}
@@ -128,6 +101,13 @@ const Wishlist = () => {
                   </Text>
                 </Space>
               </div>
+              <Image
+                alt={product.name}
+                src={product.image}
+                preview={false}
+                width={100}
+                style={{ borderRadius: 8, objectFit: "cover" }}
+              />
             </div>
 
             <Divider style={{ margin: "12px 0" }} />
@@ -136,20 +116,20 @@ const Wishlist = () => {
               style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}
             >
               <Button
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => handleRemove(product.id)}
-                loading={toggleWishlist.isPending}
-              >
-                حذف از لیست
-              </Button>
-              <Button
                 type="primary"
                 icon={<ShoppingCartOutlined />}
                 onClick={() => addToCart.mutate(product.id)}
                 loading={addToCart.isPending}
               >
                 افزودن به سبد
+              </Button>
+              <Button
+                danger
+                icon={<DeleteOutlined />}
+                onClick={() => handleRemove(product.id)}
+                loading={toggleWishlist.isPending}
+              >
+                حذف از لیست
               </Button>
             </div>
           </Card>

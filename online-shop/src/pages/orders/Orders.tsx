@@ -6,19 +6,18 @@ import {
   Button,
   Empty,
   Space,
-  Avatar,
-  Tooltip,
   Image,
 } from "antd";
-import { RightOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useOrders } from "../../queries/order/useOrder";
 import { getOrderStatusConfig } from "../../utils/OrderUtils";
 import { useState } from "react";
 import OrderDetailModal from "../../components/layout/order-detail-modal/OrderDetailModal";
 import { badgeColors } from "../../utils/‌‌BadgeColors";
+import SubHeader from "../../components/ui/SubHeader/SubHeader";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const { TabPane } = Tabs;
 
 const Orders = () => {
@@ -40,11 +39,7 @@ const Orders = () => {
     const status = getOrderStatusConfig(order.status);
 
     return (
-      <Card
-        key={order.id}
-        style={{ marginBottom: 16, borderRadius: 14 }}
-        bodyStyle={{ padding: 16 }}
-      >
+      <Card key={order.id} style={{ marginBottom: 16, borderRadius: 14 }}>
         <Space direction="vertical" style={{ width: "100%" }}>
           <div
             style={{
@@ -58,8 +53,7 @@ const Orders = () => {
             </Text>
             <Badge
               count={status.label}
-              style={{ fontWeight: "500", fontSize: 13 }}
-              offset={[-12, 0]}
+              style={{ fontWeight: "500", fontSize: 12, borderRadius: "5px" }}
             />
           </div>
 
@@ -79,7 +73,7 @@ const Orders = () => {
               }
             />
             <div>
-              <Text strong style={{ fontSize: 14 }}>
+              <Text strong style={{ fontSize: 1 }}>
                 {order.items[0]?.product.name}
               </Text>
               <br />
@@ -93,14 +87,15 @@ const Orders = () => {
             <div
               style={{
                 minWidth: 90,
-                textAlign: "end",
+                textAlign: "center",
                 color: "#5280ff",
                 fontWeight: 700,
-                fontSize: 15,
+                fontSize: 12,
+                display: "flex ",
               }}
             >
               {order.total.toLocaleString()}{" "}
-              <span style={{ fontSize: 13 }}>تومان</span>
+              <span style={{ fontSize: 12 }}> تومان</span>
             </div>
           </div>
 
@@ -151,42 +146,8 @@ const Orders = () => {
   return (
     <div style={{ paddingBottom: 80, minHeight: "100vh" }} dir="rtl">
       {/* Header */}
-      <div
-        style={{
-          background: "linear-gradient(135deg, #522bff, #1100ff)",
-          display: "flex",
-          color: "white",
-          borderRadius: 12,
-          justifyContent: "space-between",
-          height: 72,
-          marginBottom: 18,
-          padding: "16px 18px",
-          alignItems: "center",
-        }}
-      >
-        <Avatar
-          size={38}
-          icon={<ShoppingCartOutlined />}
-          style={{
-            backgroundColor: "#fff",
-            color: "#0145ff",
-            border: "1.5px solid #ffffff88",
-          }}
-        />
-        <Title
-          level={5}
-          style={{ color: "white", margin: 0, letterSpacing: 0 }}
-        >
-          سفارش‌های من
-        </Title>
-        <Tooltip title="بازگشت">
-          <RightOutlined
-            className="rotate-180 cursor-pointer"
-            style={{ fontSize: 22 }}
-            onClick={() => navigate(-1)}
-          />
-        </Tooltip>
-      </div>
+
+      <SubHeader title="سفارش‌های من" icon={<ShoppingCartOutlined />} />
 
       {/* Tabs */}
       <div

@@ -15,7 +15,6 @@ import {
   CreditCardOutlined,
   CustomerServiceOutlined,
   LogoutOutlined,
-  RightOutlined,
   LeftOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +22,7 @@ import { message } from "antd";
 import { useEffect } from "react";
 import { useUserProfile } from "../../queries/user/useUserProfile";
 import { useUserOrders } from "../../queries/user/useUserOrders";
+import SubHeader from "../../components/ui/SubHeader/SubHeader";
 
 const { Title, Text } = Typography;
 
@@ -79,35 +79,7 @@ const Profile = () => {
 
   return (
     <div style={{ paddingBottom: 80, direction: "rtl" }}>
-      {/* هدر */}
-      <div
-        style={{
-          background: "linear-gradient(135deg, #522bff, #1100ff)",
-          color: "white",
-          padding: "20px 16px",
-          textAlign: "center",
-          borderRadius: "10px",
-        }}
-      >
-        <Space
-          align="center"
-          style={{ justifyContent: "space-between", width: "100%" }}
-        >
-          <Avatar
-            size={40}
-            icon={<UserOutlined />}
-            style={{ backgroundColor: "#fff", color: "#0145ff" }}
-          />
-          <Title level={4} style={{ margin: 0, color: "white" }}>
-            پروفایل
-          </Title>
-          <RightOutlined
-            style={{ fontSize: 20, cursor: "pointer" }}
-            className="rotate-180"
-            onClick={() => navigate(-1)}
-          />
-        </Space>
-      </div>
+        <SubHeader title="پروفایل" icon={<UserOutlined />} />
 
       {/* کارت کاربر */}
       <Card style={{ marginTop: 10, borderRadius: 16, textAlign: "center" }}>
@@ -120,7 +92,7 @@ const Profile = () => {
             marginBottom: 12,
           }}
         />
-        <Title level={4} style={{ margin: "8px 0" }}>
+        <Title level={4} >
           {user?.name || "کاربر مهمان"}
         </Title>
         <Text type="secondary">{user?.email || "مهمان"}</Text>
@@ -132,10 +104,11 @@ const Profile = () => {
       {activeOrders > 0 && (
         <Card
           style={{
-            margin: "0 16px 24px",
             borderRadius: 16,
             border: "1px solid #d9f7be",
             background: "#f6ffed",
+            marginTop:"1vh",
+            marginBottom:"1vh"
           }}
         >
           <Space>

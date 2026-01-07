@@ -9,13 +9,15 @@ import {
   Badge,
   message,
 } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../queries/cart/useCart";
 import { useRemoveCartItem } from "../../queries/cart/useRemoveCart";
+import { useUpdateCartQuantity } from "../../queries/cart/useUpdateCartQuantity";
+import SubHeader from "../../components/ui/SubHeader/SubHeader";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -23,7 +25,13 @@ const Cart = () => {
 
   const { data: cart = [], isLoading } = useCart();
   const removeItem = useRemoveCartItem();
+  const updateQuantity = useUpdateCartQuantity();
 
+  // تابع برای تغییر تعداد
+  const handleQuantityChange = (productId: number, newQuantity: number) => {
+    if (newQuantity < 1) newQuantity = 1; // حداقل ۱
+    updateQuantity.mutate({ productId, quantity: newQuantity });
+  };
   const applyDiscount = () => {
     if (discountCode.trim()) {
       message.success("کد تخفیف اعمال شد!");
@@ -59,20 +67,7 @@ const Cart = () => {
 
   return (
     <div style={{ paddingBottom: 200 }}>
-      {/* هدر */}
-      <div
-        style={{
-          background: "linear-gradient(135deg, #646fff, #355aff)",
-          color: "white",
-          padding: "10px 16px",
-          textAlign: "center",
-          borderRadius: "10px",
-        }}
-      >
-        <Title level={5} style={{ margin: 0, color: "white" }}>
-          سبد خرید شما
-        </Title>
-      </div>
+      <SubHeader icon={<ShoppingCartOutlined />} title="سبد خرید" />
 
       {/* کارت محصولات */}
       {cart.map((item: any) => (
@@ -87,7 +82,7 @@ const Cart = () => {
                 <Text strong style={{ fontSize: 14, display: "block" }}>
                   {item.product.name}
                 </Text>
-                <div style={{ display: "grid", gap: 4 }}>
+                <div style={{ display: "grid", gap: 10 }}>
                   <Text
                     strong
                     delete={item.product.discount > 0}
@@ -96,26 +91,28 @@ const Cart = () => {
                       color: item.product.discount ? "gray" : "red",
                     }}
                   >
-                    {item.product.price.toLocaleString()} تومان
+                    تومان {item.product.price.toLocaleString()}
+                    {item.product.discount > 0 && (
+                      <Badge
+                        count={`${item.product.discount}%`}
+                        style={{
+                          backgroundColor: "#f5222d",
+                          marginTop: 8,
+                          borderRadius: "5px",
+                        }}
+                      />
+                    )}{" "}
                   </Text>
 
-                  <Text strong style={{ color: "#f5222d", fontSize: 16 }}>
+                  <Text strong style={{ color: "#f5222d", fontSize: 15 }}>
                     {item.product.discount > 0 &&
                       (
                         (item.product.price * (100 - item.product.discount)) /
                         100
-                      ).toLocaleString()}
+                      ).toLocaleString()}{" "}
+                    تومان
                   </Text>
                 </div>
-                {item.product.discount > 0 && (
-                  <Badge
-                    count={`${item.product.discount}%`}
-                    style={{
-                      backgroundColor: "#f5222d",
-                      marginTop: 8,
-                    }}
-                  />
-                )}{" "}
               </div>
 
               <img
@@ -129,7 +126,7 @@ const Cart = () => {
               />
             </div>
 
-            <Divider style={{ margin: "12px 0" }} />
+            <Divider style={{ margin: "1px 0" }} />
 
             <div
               style={{
@@ -138,12 +135,46 @@ const Cart = () => {
                 alignItems: "center",
               }}
             >
-              <Text strong>{item.quantity} :تعداد</Text>
+              <Space>
+                <Button
+                  size="small"
+                  onClick={() =>
+                    handleQuantityChange(item.product.id, item.quantity - 1)
+                  }
+                  disabled={updateQuantity.isPending}
+                >
+                  -
+                </Button>
+
+                <Input
+                  type="number"
+                  min={1}
+                  value={item.quantity}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value) || 1;
+                    handleQuantityChange(item.product.id, val);
+                  }}
+                  style={{ width: 60, textAlign: "center" }}
+                  disabled={updateQuantity.isPending}
+                />
+
+                <Button
+                  size="small"
+                  onClick={() =>
+                    handleQuantityChange(item.product.id, item.quantity + 1)
+                  }
+                  disabled={updateQuantity.isPending}
+                >
+                  +
+                </Button>
+              </Space>
 
               <Button
                 type="text"
                 danger
                 icon={<DeleteOutlined />}
+                loading={removeItem.isPending}
+                style={{ marginTop: "1vh" }}
                 onClick={() => removeItem.mutate(item.product.id)}
               >
                 حذف

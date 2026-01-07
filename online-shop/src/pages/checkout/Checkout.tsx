@@ -8,13 +8,19 @@ import {
   Divider,
   Select,
 } from "antd";
-import { HomeOutlined, TruckOutlined, WalletOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  HomeOutlined,
+  TruckOutlined,
+  WalletOutlined,
+} from "@ant-design/icons";
 import { useState } from "react";
 
 import { useCart } from "../../queries/cart/useCart";
 import { useCreateOrder } from "../../queries/order/useCreateOrder";
+import SubHeader from "../../components/ui/SubHeader/SubHeader";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const { Option } = Select;
 
 const Checkout = () => {
@@ -37,7 +43,10 @@ const Checkout = () => {
 
   const total =
     cart?.reduce(
-      (sum: any, item: any) => sum + item.product.price * (100 - item.product.discount) / 100 * item.quantity,
+      (sum: any, item: any) =>
+        sum +
+        ((item.product.price * (100 - item.product.discount)) / 100) *
+          item.quantity,
       0
     ) || 0;
 
@@ -54,9 +63,7 @@ const Checkout = () => {
 
   return (
     <div className="min-h-screen" dir="rtl">
-      <Title level={5} className="text-center mb-6">
-        تکمیل سفارش
-      </Title>
+      <SubHeader title="تکمیل سفارش" icon={<CheckCircleOutlined />} />
 
       {/* آدرس */}
       <Card className="rounded-2xl mb-4">
@@ -106,7 +113,7 @@ const Checkout = () => {
 
       {/* ارسال */}
       <Card style={{ marginTop: "1vh", marginBottom: "1vh" }}>
-        <Space className="mb-3" style={{display:"block"}}>
+        <Space className="mb-3" style={{ display: "block" }}>
           <TruckOutlined />
           <Text strong>روش ارسال</Text>
         </Space>
@@ -161,7 +168,7 @@ const Checkout = () => {
         disabled={!isAddressValid}
         loading={createOrder.isPending}
         onClick={submitOrder}
-        style={{marginTop:"1vh"}}
+        style={{ marginTop: "1vh" }}
       >
         ثبت نهایی سفارش
       </Button>

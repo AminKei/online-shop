@@ -2,30 +2,17 @@ import { Card, Row, Col, Typography, Drawer, Space, Tag } from "antd";
 
 import { useState } from "react";
 import { perfumeCategories } from "../../data-api/perfumeCategories";
-
-const { Title, Text } = Typography;
+import SubHeader from "../../components/ui/SubHeader/SubHeader";
+import { AppstoreOutlined } from "@ant-design/icons";
+const { Text } = Typography;
 
 const Categories = () => {
   const [open, setOpen] = useState(false);
   const [activeCat, setActiveCat] = useState<any>(null);
 
   return (
-    <div style={{ padding: "24px 16px", direction: "rtl" }}>
-      <div
-        style={{
-          background: "linear-gradient(135deg, #646fff, #355aff)",
-          color: "white",
-          padding: "10px ",
-          textAlign: "center",
-          borderRadius: "10px ",
-          marginBottom: "2vh",
-        }}
-      >
-        <Title level={5} style={{ color: "white" }}>
-          دسته‌بندی محصولات
-        </Title>
-      </div>
-
+    <div>
+      <SubHeader icon={<AppstoreOutlined />} title="دسته‌بندی محصولات" />
       <Row gutter={[16, 16]}>
         {perfumeCategories.map((cat, index) => (
           <Col xs={12} sm={8} key={index}>

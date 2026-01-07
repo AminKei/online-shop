@@ -10,9 +10,9 @@ const Login = () => {
   const loginMutation = useLogin(() => navigate("/"));
 
   return (
-    <div className="max-w-md mx-auto mt-6 px-4" dir="rtl">
+    <div dir="rtl">
       <Card className="rounded-xl ">
-        <Title level={5} className="text-center mb-10">
+        <Title level={5} className="text-center">
           ورود به فروشگاه
         </Title>
 

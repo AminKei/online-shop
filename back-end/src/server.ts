@@ -190,6 +190,34 @@ app.get("/api/wishlist/check/:productId", authenticateToken, (req: AuthRequest, 
   res.json({ isInWishlist });
 });
 
+// آپدیت تعداد محصول در سبد خرید
+app.put("/api/cart/:productId", authenticateToken, (req: AuthRequest, res) => {
+  const productId = parseInt(req.params.productId);
+  const { quantity } = req.body;
+
+  if (!Number.isInteger(quantity) || quantity < 1) {
+    return res.status(400).json({ message: "تعداد باید عدد صحیح مثبت باشد" });
+  }
+
+  const cart = carts[req.user.id] || [];
+  const item = cart.find((i: any) => i.product.id === productId);
+
+  if (!item) {
+    return res.status(404).json({ message: "محصول در سبد خرید پیدا نشد" });
+  }
+
+  item.quantity = quantity;
+
+  // اگر تعداد به 0 رسید، می‌تونیم حذفش کنیم (اختیاری)
+  if (quantity === 0) {
+    carts[req.user.id] = cart.filter((i: any) => i.product.id !== productId);
+  } else {
+    carts[req.user.id] = cart;
+  }
+
+  res.json(carts[req.user.id]);
+});
+
 // ==================== سفارشات ====================
 
 app.post("/api/orders", authenticateToken, (req: AuthRequest, res) => {
