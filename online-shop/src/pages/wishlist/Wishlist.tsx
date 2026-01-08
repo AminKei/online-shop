@@ -15,7 +15,7 @@ import {
   HeartOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useWishlist } from "../../queries/wishlist/useWishlist";
 import { useToggleWishlist } from "../../queries/wishlist/useToggleWishlist";
@@ -25,6 +25,8 @@ import SubHeader from "../../components/ui/SubHeader/SubHeader";
 const { Text } = Typography;
 
 const Wishlist = () => {
+  const navigate = useNavigate();
+
   const { data: wishlist = [], isLoading } = useWishlist();
   const toggleWishlist = useToggleWishlist();
   const addToCart = useAddToCart();
@@ -51,11 +53,14 @@ const Wishlist = () => {
 
   if (wishlist.length === 0) {
     return (
-      <div style={{ textAlign: "center", padding: 40 }}>
-        <Empty description="علاقه‌مندی‌های شما خالی است">
-          <Link to="/products">
-            <Button type="primary">برو به فروشگاه</Button>
-          </Link>
+      <div style={{ marginTop: 100 }}>
+        <Empty
+          description="علاقه‌مندی‌های شما خالی است"
+          style={{ marginTop: 100 }}
+        >
+          <Button type="primary" size="large" onClick={() => navigate("/")}>
+            برو به فروشگاه{" "}
+          </Button>
         </Empty>
       </div>
     );
@@ -84,11 +89,11 @@ const Wishlist = () => {
 
                 <Space direction="vertical" style={{ marginTop: 8 }}>
                   {product.discount > 0 && (
-                    <Text delete type="secondary">
+                    <Text delete strong type="secondary">
+                      {product.price.toLocaleString()} تومان
                       {product.discount > 0 && (
                         <Tag color="red">-{product.discount}%</Tag>
                       )}
-                      {product.price.toLocaleString()} تومان
                     </Text>
                   )}
                   <Text strong style={{ color: "#f5222d", fontSize: 16 }}>
@@ -113,7 +118,11 @@ const Wishlist = () => {
             <Divider style={{ margin: "12px 0" }} />
 
             <div
-              style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}
+              style={{
+                display: "flex",
+                gap: 0,
+                justifyContent: "space-between",
+              }}
             >
               <Button
                 type="primary"

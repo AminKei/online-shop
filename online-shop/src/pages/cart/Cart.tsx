@@ -6,8 +6,8 @@ import {
   Input,
   Empty,
   Divider,
-  Badge,
   message,
+  Tag,
 } from "antd";
 import { DeleteOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -41,15 +41,13 @@ const Cart = () => {
     }
   };
 
-  const total =
-    cart?.reduce(
-      (sum: number, item: any) =>
-        sum +
-        ((item.product.price * (100 - item.product.discount)) / 100) *
-          item.quantity,
-      0
-    ) || 0;
-
+const total =
+  cart?.reduce((sum:number, item:any ) => {
+    const price = item.product.price;
+    const discount = Number(item.product.discount ?? 0); // اگر null یا undefined بود، 0
+    const discountedPrice = price * ((100 - discount) / 100);
+    return sum + discountedPrice * item.quantity;
+  }, 0) || 0;
   if (isLoading)
     return (
       <div style={{ textAlign: "center", padding: 60 }}>در حال بارگذاری...</div>
@@ -93,15 +91,8 @@ const Cart = () => {
                   >
                     تومان {item.product.price.toLocaleString()}
                     {item.product.discount > 0 && (
-                      <Badge
-                        count={`${item.product.discount}%`}
-                        style={{
-                          backgroundColor: "#f5222d",
-                          marginTop: 8,
-                          borderRadius: "5px",
-                        }}
-                      />
-                    )}{" "}
+                      <Tag color="red">-{item.product.discount}%</Tag>
+                    )}
                   </Text>
 
                   <Text strong style={{ color: "#f5222d", fontSize: 15 }}>

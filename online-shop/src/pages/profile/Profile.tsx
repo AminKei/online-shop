@@ -40,7 +40,7 @@ const Profile = () => {
   }, [token, navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.clear();
     message.success("با موفقیت خارج شدید");
     navigate("/login");
   };
@@ -79,7 +79,7 @@ const Profile = () => {
 
   return (
     <div style={{ paddingBottom: 80, direction: "rtl" }}>
-        <SubHeader title="پروفایل" icon={<UserOutlined />} />
+      <SubHeader title="پروفایل" icon={<UserOutlined />} />
 
       {/* کارت کاربر */}
       <Card style={{ marginTop: 10, borderRadius: 16, textAlign: "center" }}>
@@ -92,10 +92,16 @@ const Profile = () => {
             marginBottom: 12,
           }}
         />
-        <Title level={4} >
-          {user?.name || "کاربر مهمان"}
+        <Title level={5}>
+          {user?.name ? user.name : "لطفا مجدد وارد شوید"}
         </Title>
-        <Text type="secondary">{user?.email || "مهمان"}</Text>
+        <Text type="secondary">
+          {user?.email ? (
+            user.email
+          ) : (
+            <Button onClick={() => navigate("/login")}>ورود</Button>
+          )}
+        </Text>
         <Divider />
         <Text type="secondary">عضو از اردیبهشت ۱۴۰۴</Text>
       </Card>
@@ -107,8 +113,8 @@ const Profile = () => {
             borderRadius: 16,
             border: "1px solid #d9f7be",
             background: "#f6ffed",
-            marginTop:"1vh",
-            marginBottom:"1vh"
+            marginTop: "1vh",
+            marginBottom: "1vh",
           }}
         >
           <Space>

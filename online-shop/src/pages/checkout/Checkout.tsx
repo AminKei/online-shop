@@ -41,14 +41,13 @@ const Checkout = () => {
 
   const shippingCost = shippingType === "express" ? 80000 : 40000;
 
-  const total =
-    cart?.reduce(
-      (sum: any, item: any) =>
-        sum +
-        ((item.product.price * (100 - item.product.discount)) / 100) *
-          item.quantity,
-      0
-    ) || 0;
+const total =
+  cart?.reduce((sum, item) => {
+    const price = item.product.price;
+    const discount = Number(item.product.discount ?? 0); // اگر null یا undefined بود، 0
+    const discountedPrice = price * ((100 - discount) / 100);
+    return sum + discountedPrice * item.quantity;
+  }, 0) || 0;
 
   const finalPrice = total + shippingCost;
 
