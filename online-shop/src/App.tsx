@@ -6,6 +6,7 @@ import AppHeader from "./components/layout/header/Header";
 import Navbar from "./components/layout/navbar/Navbar";
 import Loading from "./components/base-componets/loading/Loading";
 import { routes } from "./config/routes/routes";
+import Notifications from "./components/ui/Notifications/Notifications";
 
 const { Content } = Layout;
 
@@ -20,13 +21,13 @@ function App() {
         <Layout className="min-h-full font-[Yekan]">
           <AppHeader />
 
-          <Content className="p-4 -mt-5 bg-[#fff]">
+          <Content className="p-4 -mt-5 bg-[#fff] mb-16">
             <Suspense fallback={<Loading />}>
               <AppRoutes />
             </Suspense>
           </Content>
         </Layout>
-
+        <Notifications/>
         <Navbar />
       </MobileOnly>
     </BrowserRouter>

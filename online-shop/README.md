@@ -18,7 +18,7 @@ If you are developing a production application, we recommend updating the config
 ```js
 export default defineConfig([
   globalIgnores(['dist']),
-  {
+  { 
     files: ['**/*.{ts,tsx}'],
     extends: [
       // Other configs...

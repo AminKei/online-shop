@@ -41,13 +41,13 @@ const Cart = () => {
     }
   };
 
-const total =
-  cart?.reduce((sum:number, item:any ) => {
-    const price = item.product.price;
-    const discount = Number(item.product.discount ?? 0); // اگر null یا undefined بود، 0
-    const discountedPrice = price * ((100 - discount) / 100);
-    return sum + discountedPrice * item.quantity;
-  }, 0) || 0;
+  const total =
+    cart?.reduce((sum: number, item: any) => {
+      const price = item.product.price;
+      const discount = Number(item.product.discount ?? 0); // اگر null یا undefined بود، 0
+      const discountedPrice = price * ((100 - discount) / 100);
+      return sum + discountedPrice * item.quantity;
+    }, 0) || 0;
   if (isLoading)
     return (
       <div style={{ textAlign: "center", padding: 60 }}>در حال بارگذاری...</div>
@@ -113,6 +113,10 @@ const total =
                   width: 120,
                   height: 100,
                   borderRadius: 12,
+                }}
+                onError={(e) => {
+                  e.currentTarget.src =
+                    "https://www.svgrepo.com/show/508699/landscape-placeholder.svg";
                 }}
               />
             </div>

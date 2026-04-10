@@ -36,7 +36,7 @@ const Wishlist = () => {
       { productId, isCurrentlyInWishlist: true },
       {
         onSuccess: () => message.success("از علاقه‌مندی‌ها حذف شد"),
-      }
+      },
     );
   };
 
@@ -99,7 +99,7 @@ const Wishlist = () => {
                   <Text strong style={{ color: "#f5222d", fontSize: 16 }}>
                     {product.discount > 0
                       ? Math.round(
-                          (product.price * (100 - product.discount)) / 100
+                          (product.price * (100 - product.discount)) / 100,
                         ).toLocaleString()
                       : product.price.toLocaleString()}{" "}
                     تومان
@@ -112,6 +112,10 @@ const Wishlist = () => {
                 preview={false}
                 width={100}
                 style={{ borderRadius: 8, objectFit: "cover" }}
+                onError={(e) => {
+                  e.currentTarget.src =
+                    "https://www.svgrepo.com/show/508699/landscape-placeholder.svg";
+                }}
               />
             </div>
 

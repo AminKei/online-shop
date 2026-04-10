@@ -60,7 +60,7 @@ const ProductCard = ({
               src={
                 image ||
                 `https://via.placeholder.com/300x300?text=${encodeURIComponent(
-                  name
+                  name,
                 )}`
               }
               alt={name}
@@ -69,6 +69,10 @@ const ProductCard = ({
                 height: 140,
                 objectFit: "cover",
                 borderRadius: 10,
+              }}
+              onError={(e) => {
+                e.currentTarget.src =
+                  "https://www.svgrepo.com/show/508699/landscape-placeholder.svg";
               }}
             />
           </div>

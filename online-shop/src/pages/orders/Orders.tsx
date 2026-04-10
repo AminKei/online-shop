@@ -29,7 +29,7 @@ const Orders = () => {
 
   // فیلتر سفارش‌ها بر اساس وضعیت
   const currentOrders = orders.filter(
-    (o: any) => o.status === "PENDING" || o.status === "SHIPPED"
+    (o: any) => o.status === "PENDING" || o.status === "SHIPPED",
   );
   const cancelledOrders = orders.filter((o: any) => o.status === "CANCELLED");
   const deliveredOrders = orders.filter((o: any) => o.status === "DELIVERED");
