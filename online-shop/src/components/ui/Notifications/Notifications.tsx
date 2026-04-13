@@ -11,7 +11,7 @@ export default function Notifications() {
 
   return (
     <Drawer
-      placement="bottom"
+      placement=""
       height={220}
       open={open}
       onClose={() => setOpen(false)}
